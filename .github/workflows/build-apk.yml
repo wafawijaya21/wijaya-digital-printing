@@ -29,11 +29,28 @@ jobs:
           mkdir buildsrc
           unzip -q Wijaya_Digital_Printing_Android.zip -d buildsrc
 
+            - name: Fix JVM targets
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path("buildsrc/app/build.gradle")
+          s = p.read_text()
+
+          s = s.replace(
+              "    defaultConfig {",
+              """    compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+              kotlinOptions {
+                  jvmTarget = '17'
+              }
+              defaultConfig {"""
+          )
+
+          p.write_text(s)
+          PY
+
       - name: Build APK
         run: gradle -p buildsrc assembleDebug
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: Wijaya-Digital-Printing-APK
-          path: buildsrc/app/build/outputs/apk/debug/app-debug.apk
