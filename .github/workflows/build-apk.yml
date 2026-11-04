@@ -28,8 +28,7 @@ jobs:
         run: |
           mkdir buildsrc
           unzip -q Wijaya_Digital_Printing_Android.zip -d buildsrc
-
-            - name: Fix JVM targets
+      - name: Fix JVM targets
         run: |
           python3 - <<'PY'
           from pathlib import Path
